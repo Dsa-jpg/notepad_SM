@@ -1,16 +1,53 @@
-import React from "react";
+import React, {useState} from "react";
 
-const NoteItem = ({ note, onDelete }) => {
+const NoteItem = ({ note, onDelete, onEdit }) => {
+
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [editText, setEditText] = useState(note.content);
 
     const handleDelete = () => {
         onDelete(note.id);
     };
 
+    const handleDoubleClick = () => {
+        setIsEditing(true);
+    };
+
+    const handleChange = (event) => {
+        setEditText(event.target.value);
+    };
+
+    const handleBlur = () => {
+        if (editText.trim() !== "") {
+            onEdit(note.id, editText);
+        }
+        setIsEditing(false);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === "Enter") {
+            handleBlur();
+        }
+    };
 
     return (
         <div>
-            <li>{note.content}</li>
-            <button onClick={handleDelete}>Delete</button>
+            {isEditing ? (
+                <input
+                    type="text"
+                    value={editText}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    onKeyDown={handleKeyDown}
+                    autoFocus
+                />
+            ) : (
+                <div onDoubleClick={handleDoubleClick}>
+                    <span>{note.content}</span>
+                    <button onClick={handleDelete}>Delete</button>
+                </div>
+            )}
         </div>
     );
 };

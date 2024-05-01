@@ -26,13 +26,20 @@ const NoteContainer = () => {
         setNotes(notes.filter((note) => note.id !== id));
     };
     
+    const editNote = (id, newContent) => {
+        setNotes(
+            notes.map((note) =>
+                note.id === id ? { ...note, content: newContent } : note
+            )
+        );
+    };
     
 
     return (
         <div>
             <Header />
             <InputNote addNote={addNote} />
-            <NoteList notes={notes} onDelete={deleteNote} />
+            <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
             <Footer />
         </div>
     );
